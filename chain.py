@@ -6,7 +6,7 @@ import os
 import re
 import random
 import time
-from datetime import datetime
+from datetime import datetime, timedelta
 
 # Load variables from .env file
 load_dotenv()
@@ -60,6 +60,20 @@ def generate_and_post_example():
     except Exception as e:
         print(f"Error posting to destination Mastodon account: {e}")
 
+# Function to refresh the Markov dataset
+def refresh_dataset():
+    # Clear the current dataset
+    markov.clear()
+
+    # Fetch Mastodon posts for source account
+    source_posts = get_account_posts(source_account)
+
+    # Add source Mastodon posts to MarkovText
+    for post in source_posts:
+        markov.data(post, part=True)
+
+    markov.data('', part=False)
+
 # Initialize Mastodon API for source account
 mastodon_base_url = os.getenv("MASTODON_BASE_URL")
 mastodon_access_token = os.getenv("MASTODON_ACCESS_TOKEN")
@@ -112,32 +126,29 @@ if not source_account:
 # Initialize MarkovText
 markov = MarkovText()
 
-# Fetch Mastodon posts for source account
-source_posts = get_account_posts(source_account)
+# Fetch Mastodon posts for source account and add them to MarkovText
+refresh_dataset()
 
-# Add source Mastodon posts to MarkovText
-for post in source_posts:
-    markov.data(post, part=True)
-
-markov.data('', part=False)
-
-# Generate and post an example at random intervals between 1 and 3 hours
+# Main loop
 try:
-    while True:
-        generate_and_post_example()
-        time.sleep(3600)
+    refresh_interval = random.randint(300, 600)  # Random interval between 5 and 10 minutes in seconds
+    next_refresh = datetime.now() + timedelta(seconds=refresh_interval)
 
-        # Check if it's time to update the dataset (every day)
+    while True:
         current_time = datetime.now()
-        if current_time.hour == 0 and current_time.minute == 0:
-            # Save the Markov dataset to JSON
-            dataset_filename = 'markov_dataset.json'
-            markov.save(dataset_filename)
-            print(f"Dataset saved to {dataset_filename}")
+
+        if current_time >= next_refresh:
+            # Refresh the dataset
+            refresh_dataset()
+
+            # Post an example
+            generate_and_post_example()
+
+            # Update next refresh time
+            refresh_interval = random.randint(300, 600)
+            next_refresh = current_time + timedelta(seconds=refresh_interval)
+
+        time.sleep(60)  # Check every minute
 
 except KeyboardInterrupt:
-    # Save the Markov dataset to JSON before exiting
-    dataset_filename = 'markov_dataset.json'
-    markov.save(dataset_filename)
-    print(f"\nDataset saved to {dataset_filename}")
     print("\nExiting...")

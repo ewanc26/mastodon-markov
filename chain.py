@@ -131,8 +131,8 @@ refresh_dataset()
 
 # Main loop
 try:
-    current_time = datetime.now()  # Initialize current_time variable
-    refresh_interval = random.randint(300, 600)  # Random interval between 5 and 10 minutes in seconds
+    current_time = datetime.now()
+    refresh_interval = random.randint(300, 600)
     next_refresh = current_time + timedelta(seconds=refresh_interval)
 
     while True:
@@ -142,14 +142,19 @@ try:
         # Post an example
         generate_and_post_example()
         
-        refresh_interval = random.randint(300, 600)
-        next_refresh = current_time + timedelta(seconds=refresh_interval)
         current_time = datetime.now()
         time_remaining = next_refresh - current_time
 
-        # Print the remaining time in a user-friendly format (e.g., minutes, seconds)
-        print(f"Time until next post refresh: {time_remaining.seconds // 60} minutes {time_remaining.seconds % 60} seconds")
-        time.sleep(time_remaining.total_seconds())
+        if time_remaining.total_seconds() > 0:
+            minutes = time_remaining.seconds // 60
+            seconds = time_remaining.seconds % 60
+            print(f"Time until next post refresh: {minutes} minute{'s' if minutes != 1 else ''}, {seconds} second{'s' if seconds != 1 else ''}")
+            time.sleep(time_remaining.total_seconds())
+        else:
+            time_remaining = 300
+            print(f"Refreshing in {time_remaining // 60} minute{'s' if minutes != 1 else ''}.")
+            time.sleep(time_remaining)
+            next_refresh = current_time + timedelta(seconds=time_remaining)
 
 except KeyboardInterrupt:
     print("\nExiting...")

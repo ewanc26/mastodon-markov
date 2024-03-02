@@ -1,6 +1,6 @@
 # Mastodon Markov Bot
 
-This Python script generates Markov chain text based on the posts of a Mastodon account and posts them to another Mastodon account. It also periodically updates its dataset and posts a new status at random intervals.
+This Python script generates Markov chain text based on the posts of a Mastodon account and posts them to another Mastodon account. It also periodically updates its dataset and posts a new status.
 
 ## Setup
 

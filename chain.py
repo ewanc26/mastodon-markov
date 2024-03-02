@@ -62,8 +62,8 @@ def generate_and_post_example():
 
 # Function to refresh the Markov dataset
 def refresh_dataset():
-    # Clear the current dataset
-    markov.clear()
+    global markov  # Declare markov as a global variable
+    markov = MarkovText()  # Reinitialize the MarkovText object
 
     # Fetch Mastodon posts for source account
     source_posts = get_account_posts(source_account)
@@ -135,7 +135,13 @@ try:
     next_refresh = datetime.now() + timedelta(seconds=refresh_interval)
 
     while True:
+        refresh_interval = random.randint(300, 600)
+        next_refresh = datetime.now() + timedelta(seconds=refresh_interval)
         current_time = datetime.now()
+        time_remaining = next_refresh - current_time
+
+        # Print the remaining time in a user-friendly format (e.g., minutes, seconds)
+        print(f"Time until next post refresh: {time_remaining.seconds // 60} minutes {time_remaining.seconds % 60} seconds")
 
         if current_time >= next_refresh:
             # Refresh the dataset

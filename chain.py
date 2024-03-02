@@ -125,9 +125,7 @@ markov.data('', part=False)
 try:
     while True:
         generate_and_post_example()
-        # Sleep for a random time between 1 and 3 hours
-        sleep_time = random.randint(3600, 10800)  # Random time between 1 and 3 hours in seconds
-        time.sleep(sleep_time)
+        time.sleep(3600)
 
         # Check if it's time to update the dataset (every day)
         current_time = datetime.now()

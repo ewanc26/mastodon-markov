@@ -37,6 +37,5 @@ This Python script generates Markov chain text based on the posts of a Mastodon 
 ## Notes
 
 - Ensure that both the source and destination Mastodon accounts have appropriate permissions and visibility settings for posting.
-- The script automatically saves the Markov dataset to a JSON file (`markov_dataset.json`) every day at midnight.
 - If you need to change any Mastodon or environment variables, update them in the `.env` file.
 - Make sure to customize the script according to your needs, such as adjusting the character limit for generated text or the update interval for the dataset.

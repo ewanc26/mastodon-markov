@@ -30,7 +30,7 @@ This Python script generates Markov chain text based on the posts of a Mastodon 
    python mastodon_markov_bot.py
    ```
 
-2. The script will fetch recent posts from the source Mastodon account, generate Markov chain text, and post it to the destination Mastodon account at random intervals between 1 and 3 hours.
+2. The script will fetch recent posts from the source Mastodon account, generate Markov chain text, and post it to the destination Mastodon account at random intervals between 5 and 10 minutes.
 
 3. Press `Ctrl+C` to stop the script.
 

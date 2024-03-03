@@ -129,32 +129,36 @@ markov = MarkovText()
 # Fetch Mastodon posts for source account and add them to MarkovText
 refresh_dataset()
 
+def calculate_refresh_interval():
+    # Calculate a random refresh interval between 5 to 10 minutes (300 to 600 seconds)
+    return random.randint(300, 600)
+
+def calculate_next_refresh(current_time, refresh_interval):
+    # Calculate the next refresh time based on the current time and refresh interval
+    return current_time + timedelta(seconds=refresh_interval)
+
 # Main loop
 try:
-    current_time = datetime.now()
-    refresh_interval = random.randint(300, 600)
-    next_refresh = current_time + timedelta(seconds=refresh_interval)
-
     while True:
+        current_time = datetime.now()
+        refresh_interval = calculate_refresh_interval()
+        next_refresh = calculate_next_refresh(current_time, refresh_interval)
+
         # Refresh the dataset
         refresh_dataset()
 
         # Post an example
         generate_and_post_example()
-        
-        current_time = datetime.now()
+
+        # Calculate time remaining until the next refresh
         time_remaining = next_refresh - current_time
 
         if time_remaining.total_seconds() > 0:
-            minutes = time_remaining.seconds // 60
-            seconds = time_remaining.seconds % 60
+            # If there is time remaining, sleep until the next refresh
+            minutes = int(time_remaining.total_seconds()) // 60
+            seconds = int(time_remaining.total_seconds()) % 60
             print(f"Time until next post refresh: {minutes} minute{'s' if minutes != 1 else ''}, {seconds} second{'s' if seconds != 1 else ''}")
             time.sleep(time_remaining.total_seconds())
-        else:
-            time_remaining = 300
-            print(f"Refreshing in {time_remaining // 60} minute{'s' if minutes != 1 else ''}.")
-            time.sleep(time_remaining)
-            next_refresh = current_time + timedelta(seconds=time_remaining)
 
 except KeyboardInterrupt:
     print("\nExiting...")

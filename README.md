@@ -38,4 +38,4 @@ This Python script generates Markov chain text based on the posts of a Mastodon 
 
 - Ensure that both the source and destination Mastodon accounts have appropriate permissions and visibility settings for posting.
 - If you need to change any Mastodon or environment variables, update them in the `.env` file.
-- Make sure to customize the script according to your needs, such as adjusting the character limit for generated text or the update interval for the dataset.
+- Make sure to customise the script according to your needs, such as adjusting the character limit for generated text or the update interval for the dataset.

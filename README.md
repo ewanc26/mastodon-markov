@@ -19,6 +19,7 @@ This Python script generates Markov chain text based on the posts of a Mastodon 
    MASTODON_ACCESS_TOKEN=<source Mastodon account access token>
    DESTINATION_MASTODON_BASE_URL=<destination Mastodon instance base URL>
    DESTINATION_MASTODON_ACCESS_TOKEN=<destination Mastodon account access token>
+   DESTINATION_MASTODON_CHAR_LIMIT=<destination Mastodon character limit>
    SOURCE_MASTODON_ACCOUNT_ID=<source Mastodon account ID>
    ```
 

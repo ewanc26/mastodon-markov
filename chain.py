@@ -41,8 +41,8 @@ def generate_and_post_example():
     generated_text = markov()
 
     # Ensure the generated text meets the character limit
-    if len(generated_text) > 11000:
-        generated_text = generated_text[:11000]
+    if len(generated_text) > char_limit:
+        generated_text = generated_text[:char_limit]
 
     # Split the generated text into words
     words = generated_text.split()
@@ -96,16 +96,34 @@ mastodon_api = Mastodon(
 # Initialize Mastodon API for destination account
 destination_base_url = os.getenv("DESTINATION_MASTODON_BASE_URL")
 destination_access_token = os.getenv("DESTINATION_MASTODON_ACCESS_TOKEN")
+char_limit = os.getenv("DESTINATION_MASTODON_CHAR_LIMIT")
+
+# Ensure char_limit has a default value if not found in environment variables
+if not char_limit:
+    destination_mastodon_char_limit = input("Enter the destination Mastodon character limit: ")
+    char_limit = int(destination_mastodon_char_limit)  # Convert to integer
+    with open('.env', 'a') as env_file:
+        env_file.write(f"\nDESTINATION_MASTODON_CHAR_LIMIT={destination_mastodon_char_limit}")
+else:
+    char_limit = int(char_limit)  # Convert to integer if it exists in environment variables
+
+destination_mastodon_api = Mastodon(
+    access_token=destination_access_token,
+    api_base_url=destination_base_url
+)
+
 
 if not (destination_base_url and destination_access_token):
     # Prompt the user to enter Mastodon variables for destination account
     destination_base_url = input("Enter the destination Mastodon base URL: ")
     destination_access_token = input("Enter the destination Mastodon access token: ")
+    destination_char_limit = input("Enter the destination Mastodon character limit: ")
 
     # Save destination Mastodon variables in .env file
     with open('.env', 'a') as env_file:
         env_file.write(f"\nDESTINATION_MASTODON_BASE_URL={destination_base_url}")
         env_file.write(f"\nDESTINATION_MASTODON_ACCESS_TOKEN={destination_access_token}")
+        env_file.write(f"\nDESTINATION_MASTODON_CHAR_LIMIT={destination_char_limit}")
 
 destination_mastodon_api = Mastodon(
     access_token=destination_access_token,

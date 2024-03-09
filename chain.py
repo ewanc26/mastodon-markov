@@ -148,6 +148,23 @@ destination_mastodon_api = Mastodon(
     api_base_url=destination_base_url
 )
 
+if not (destination_base_url and destination_access_token):
+    # Prompt the user to enter Mastodon variables for destination account
+    destination_base_url = input("Enter the destination Mastodon base URL: ")
+    destination_access_token = input("Enter the destination Mastodon access token: ")
+    destination_char_limit = input("Enter the destination Mastodon character limit: ")
+
+    # Save destination Mastodon variables in .env file
+    with open('.env', 'a') as env_file:
+        env_file.write(f"\nDESTINATION_MASTODON_BASE_URL={destination_base_url}")
+        env_file.write(f"\nDESTINATION_MASTODON_ACCESS_TOKEN={destination_access_token}")
+        env_file.write(f"\nDESTINATION_MASTODON_CHAR_LIMIT={destination_char_limit}")
+
+destination_mastodon_api = Mastodon(
+    access_token=destination_access_token,
+    api_base_url=destination_base_url
+)
+
 # Check if source Mastodon account ID is already present in .env file, if not, prompt the user
 source_account = os.getenv("SOURCE_MASTODON_ACCOUNT_ID")
 if not source_account:
@@ -166,8 +183,8 @@ markov = MarkovText()
 refresh_dataset()
 
 def calculate_refresh_interval():
-    # Calculate a random refresh interval between 5 to 10 minutes (300 to 600 seconds)
-    return random.randint(300, 600)
+    # Calculate a random refresh interval between 30 minutes to 3 hours
+    return random.randint(1800, 10800)
 
 def calculate_next_refresh(current_time, refresh_interval):
     # Calculate the next refresh time based on the current time and refresh interval
@@ -192,9 +209,10 @@ try:
 
         if time_remaining.total_seconds() > 0:
             # If there is time remaining, sleep until the next refresh
-            minutes = int(time_remaining.total_seconds()) // 60
-            seconds = int(time_remaining.total_seconds()) % 60
-            print(f"Time until next post refresh: {minutes} minute{'s' if minutes != 1 else ''}, {seconds} second{'s' if seconds != 1 else ''}")
+            hours = int(time_remaining.total_seconds()) // 3600
+            minutes = int((time_remaining.total_seconds() % 3600) // 60)
+            seconds = int(time_remaining.total_seconds() % 60)
+            print(f"Time until next post refresh: {hours} hour{'s' if hours != 1 else ''}, {minutes} minute{'s' if minutes != 1 else ''}, {seconds} second{'s' if seconds != 1 else ''}")
             time.sleep(time_remaining.total_seconds())
 
 except KeyboardInterrupt:

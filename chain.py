@@ -28,12 +28,20 @@ def clean_content(content):
 # Function to get Mastodon account posts
 def get_account_posts(account_id):
     try:
-        # Fetch recent posts from the timeline of the specified account
-        posts = mastodon_api.account_statuses(account_id)
-        return [clean_content(status["content"]) for status in posts]
+        posts = []
+        max_id = None
+        while True:
+            # Fetch recent posts from the timeline of the specified account with pagination
+            batch = mastodon_api.account_statuses(account_id, max_id=max_id)
+            if not batch:
+                break
+            posts.extend([clean_content(status["content"]) for status in batch])
+            max_id = batch[-1]["id"]
+        return posts
     except Exception as e:
         print(f"Error: {e}")
         return None
+
 
 # Function to generate and post an example while considering character and word limits
 def generate_and_post_example():
@@ -43,6 +51,9 @@ def generate_and_post_example():
     # Ensure the generated text meets the character limit
     if len(generated_text) > char_limit:
         generated_text = generated_text[:char_limit]
+
+    # Print the generated text for debugging
+    print("Generated Text:", generated_text)
 
     # Split the generated text into words
     words = generated_text.split()
@@ -67,6 +78,10 @@ def refresh_dataset():
 
     # Fetch Mastodon posts for source account
     source_posts = get_account_posts(source_account)
+
+    # Print the number of posts fetched for debugging
+    if source_posts:
+        print(f"Fetched {len(source_posts)} posts from the source account.")
 
     # Add source Mastodon posts to MarkovText
     for post in source_posts:
@@ -112,7 +127,6 @@ destination_mastodon_api = Mastodon(
     api_base_url=destination_base_url
 )
 
-
 if not (destination_base_url and destination_access_token):
     # Prompt the user to enter Mastodon variables for destination account
     destination_base_url = input("Enter the destination Mastodon base URL: ")
@@ -157,6 +171,7 @@ def calculate_next_refresh(current_time, refresh_interval):
 
 # Main loop
 try:
+    print("Starting main loop...")
     while True:
         current_time = datetime.now()
         refresh_interval = calculate_refresh_interval()

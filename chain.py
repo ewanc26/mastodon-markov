@@ -1,3 +1,4 @@
+import warnings
 from dotenv import load_dotenv
 from markovchain.text import MarkovText
 from mastodon import Mastodon
@@ -7,6 +8,9 @@ import re
 import random
 import time
 from datetime import datetime, timedelta
+
+# Ignore FutureWarning
+warnings.simplefilter(action='ignore', category=FutureWarning)
 
 # Load variables from .env file
 load_dotenv()

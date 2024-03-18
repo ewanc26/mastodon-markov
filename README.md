@@ -1,5 +1,7 @@
 # Mastodon Markov Bot
 
+[![No Maintenance Intended](http://unmaintained.tech/badge.svg)](http://unmaintained.tech/)
+
 This Python script generates Markov chain text based on the posts of a Mastodon account and posts them to another Mastodon account. It also periodically updates its dataset and posts a new status.
 
 ## Setup

@@ -36,7 +36,7 @@ def get_account_posts(account_id):
         max_id = None
         while True:
             # Fetch recent posts from the timeline of the specified account with pagination
-            batch = mastodon_api.account_statuses(account_id, max_id=max_id)
+            batch = mastodon_api.account_statuses(account_id, max_id=max_id, exclude_reblogs=True, exclude_replies=False)
             if not batch:
                 break
             posts.extend([clean_content(status["content"]) for status in batch])
@@ -85,7 +85,7 @@ def refresh_dataset():
 
     # Print the number of posts fetched for debugging
     if source_posts:
-        print(f"Fetched {len(source_posts)} posts from the source account.")
+        print(f"Fetched {len(source_posts)} original posts and replies from the source account.")
 
     # Add source Mastodon posts to MarkovText
     for post in source_posts:
@@ -192,7 +192,6 @@ def calculate_next_refresh(current_time, refresh_interval):
 
 # Main loop
 try:
-    print("Starting main loop...")
     while True:
         current_time = datetime.now()
         refresh_interval = calculate_refresh_interval()

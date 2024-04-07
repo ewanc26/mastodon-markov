@@ -148,23 +148,6 @@ destination_mastodon_api = Mastodon(
     api_base_url=destination_base_url
 )
 
-if not (destination_base_url and destination_access_token):
-    # Prompt the user to enter Mastodon variables for destination account
-    destination_base_url = input("Enter the destination Mastodon base URL: ")
-    destination_access_token = input("Enter the destination Mastodon access token: ")
-    destination_char_limit = input("Enter the destination Mastodon character limit: ")
-
-    # Save destination Mastodon variables in .env file
-    with open('.env', 'a') as env_file:
-        env_file.write(f"\nDESTINATION_MASTODON_BASE_URL={destination_base_url}")
-        env_file.write(f"\nDESTINATION_MASTODON_ACCESS_TOKEN={destination_access_token}")
-        env_file.write(f"\nDESTINATION_MASTODON_CHAR_LIMIT={destination_char_limit}")
-
-destination_mastodon_api = Mastodon(
-    access_token=destination_access_token,
-    api_base_url=destination_base_url
-)
-
 # Check if source Mastodon account ID is already present in .env file, if not, prompt the user
 source_account = os.getenv("SOURCE_MASTODON_ACCOUNT_ID")
 if not source_account:
@@ -178,9 +161,6 @@ if not source_account:
 
 # Initialize MarkovText
 markov = MarkovText()
-
-# Fetch Mastodon posts for source account and add them to MarkovText
-refresh_dataset()
 
 def calculate_refresh_interval():
     # Calculate a random refresh interval between 30 minutes to 3 hours

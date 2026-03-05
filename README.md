@@ -54,3 +54,7 @@ This Python project generates Markov chain text based on the posts of a Mastodon
 - Ensure that both the source and destination Mastodon accounts have appropriate permissions and visibility settings for posting.
 - If you need to change any Mastodon or environment variables, update them in the `.env` file.
 - The modular structure allows customisation and scaling of specific functionalities by modifying the respective scripts in the `/src/` directory.
+
+## ☕ Support
+
+If you found this useful, consider [buying me a ko-fi](https://ko-fi.com/ewancroft)!

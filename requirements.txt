@@ -1,0 +1,3 @@
+markovchain
+mastodon.py
+python-dotenv

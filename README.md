@@ -2,58 +2,88 @@
 
 [![No Maintenance Intended](http://unmaintained.tech/badge.svg)](http://unmaintained.tech/)
 
-This Python project generates Markov chain text based on the posts of a Mastodon account and posts them to another Mastodon account. It also periodically updates its dataset and posts a new status.
+This Python project fetches posts from one Mastodon account, cleans the content, trains a Markov chain on it, and posts generated output to another Mastodon account on a repeating random schedule.
 
-## Setup
+> 🧶 Also available on [Tangled](https://tangled.org/ewancroft.uk/mastodon-markov)
 
-1. Clone this repository and navigate to the `/src/` directory containing the modular scripts.
+## Features
 
-2. Install the required dependencies by running:
+- Logs into separate source and destination Mastodon accounts
+- Pulls recent source posts and cleans the HTML before training the model
+- Generates Markov text with the `markovchain` library
+- Posts to the destination account with a configurable character limit
+- Waits a random 30 minutes to 3 hours between iterations
+- Stores logs in `log/general.log`
 
-   ```bash
-   pip install markovchain mastodon.py python-dotenv
-   ```
+## Requirements
 
-3. Create a `.env` file in the root directory of the project and add the following variables:
+- Python 3.x
+- `markovchain`
+- `mastodon.py`
+- `python-dotenv`
 
-   ```env
-   MASTODON_BASE_URL=<source Mastodon instance base URL>
-   MASTODON_ACCESS_TOKEN=<source Mastodon account access token>
-   DESTINATION_MASTODON_BASE_URL=<destination Mastodon instance base URL>
-   DESTINATION_MASTODON_ACCESS_TOKEN=<destination Mastodon account access token>
-   DESTINATION_MASTODON_CHAR_LIMIT=<destination Mastodon character limit>
-   SOURCE_MASTODON_ACCOUNT_ID=<source Mastodon account ID>
-   ```
+Install dependencies with:
+
+```bash
+pip install -r requirements.txt
+```
+
+## Configuration
+
+Create a `.env` file in the repository root with:
+
+```env
+MASTODON_BASE_URL=https://source.instance
+MASTODON_ACCESS_TOKEN=source_access_token
+DESTINATION_MASTODON_BASE_URL=https://destination.instance
+DESTINATION_MASTODON_ACCESS_TOKEN=destination_access_token
+DESTINATION_MASTODON_CHAR_LIMIT=500
+SOURCE_MASTODON_ACCOUNT_ID=123456
+```
+
+If `SOURCE_MASTODON_ACCOUNT_ID` is missing, the bot will prompt for a source username and save the resolved ID back to `.env`.
 
 ## Usage
 
-1. Run the `main.py` script located in the `/src/` directory by executing:
+Run the bot from the repository root:
 
-   ```bash
-   python src/main.py
-   ```
+```bash
+python src/main.py
+```
 
-2. The script will fetch recent posts from the source Mastodon account, generate Markov chain text, and post it to the destination Mastodon account at random intervals between 30 minutes and 3 hours.
+The bot will:
 
-3. Press `Ctrl+C` to stop the script.
+1. Load environment variables
+2. Log into the source and destination Mastodon accounts
+3. Refresh the Markov dataset from the source account
+4. Generate a post and publish it to the destination account
+5. Sleep until the next random refresh interval
 
-## File Structure
+Press `Ctrl+C` to stop the loop.
 
-- `/src/`
-  - `warnings_manager.py`: Handles suppression of specific warnings.
-  - `env_loader.py`: Loads and manages environment variables.
-  - `mastodon_client.py`: Interfaces with the Mastodon API for fetching and posting data.
-  - `text_cleaner.py`: Cleans and preprocesses text content.
-  - `markov_manager.py`: Manages Markov chain generation and dataset refreshing.
-  - `post_manager.py`: Handles posting generated content to Mastodon.
-  - `refresh_schedule.py`: Calculates refresh intervals and manages scheduling.
-  - `main.py`: Orchestrates the entire process by tying together all modules.
+## Project structure
+
+```text
+src/
+├── env_loader.py         # Load and persist environment variables
+├── warning_manager.py    # Suppress unwanted warnings
+├── mastodon_client.py    # Mastodon API helpers
+├── text_cleaner.py       # Clean source post HTML/content
+├── markov_manager.py     # Markov training and generation helpers
+├── post_manager.py       # Destination posting helper
+├── refresh_schedule.py   # Random interval scheduling helpers
+└── main.py               # Orchestrates the full bot
+```
 
 ## Notes
 
-- Ensure that both the source and destination Mastodon accounts have appropriate permissions and visibility settings for posting.
-- If you need to change any Mastodon or environment variables, update them in the `.env` file.
-- The modular structure allows customisation and scaling of specific functionalities by modifying the respective scripts in the `/src/` directory.
+- The bot writes logs to `log/general.log`.
+- The source and destination access tokens should be app-specific tokens, not account passwords.
+- If the source account ID is not set, the script can resolve it from a username interactively.
+
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
 
 ## ☕ Support
 

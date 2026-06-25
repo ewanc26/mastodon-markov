@@ -1,3 +1,9 @@
+# mastodon-markov — Nix dev shell
+#
+# Provides Python 3 for any post-processing scripts that might need
+# to run outside of the Rust binary (e.g. corpus pre-processing).
+# The Rust toolchain itself is expected to come from rustup, not nixpkgs.
+
 {
   description = "mastodon-markov — Markov chain bot for Mastodon";
 
@@ -25,6 +31,7 @@
         }
       );
 
+      # Keep formatting consistent across all Nix files in the project
       formatter = forAllSystems (pkgs: pkgs.nixfmt-rfc-style);
     };
 }

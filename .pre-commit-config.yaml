@@ -1,3 +1,6 @@
+# Pre-commit hooks for Python scripts in the repo.
+# Black and isort keep any ad-hoc formatting consistent.
+# Rust code is handled by rustfmt separately.
 repos:
   - repo: https://github.com/psf/black
     rev: 24.3.0

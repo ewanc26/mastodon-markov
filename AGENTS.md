@@ -1,16 +1,21 @@
 # AGENTS.md
 
-Guidance for agents working on the Rust Mastodon Markov bot.
+Guidance for agents working on the Rust Mastodon Markov bot. The README marks it unmaintained.
+
+## Current implementation
+
+- `src/main.rs` configures console plus daily file logging, loads separate source/destination endpoints and tokens, and runs a randomized local-time loop.
+- The network path is not implemented: `fetch_account_posts` always returns an empty vector, `get_account_id` returns `None`, `clean_content` is a pass-through, and `post_to_mastodon` only logs `Would post`. Preserve these as honest stubs until real `mammut` calls and error handling exist; never describe the current binary as publishing.
+- `refresh_markov_data` feeds posts into the existing chain rather than replacing it, despite its comment. Resolve that semantic mismatch deliberately when implementing refresh.
+- Scheduling chooses 1,800 through 10,799 seconds and immediately loops if a computed local time is already past.
 
 ## Invariants
 
-- `src/` owns configuration, source-status collection, cleanup, Markov generation, posting, scheduling, and logging.
-- Preserve source/destination account separation and Mastodon instance configurability.
-- Exclude boosts, replies, content warnings, HTML artifacts, or visibility classes according to explicit policy; do not accidentally ingest private/direct statuses.
-- Generated posts must fit the destination instance limit and respect configured visibility/content-warning behavior.
-- Validate delay ranges, schedule one next action, use bounded retry, and respect rate-limit responses.
-- Never log access tokens or private status content.
+- Preserve source/destination separation and instance configurability. Never log access tokens or private status content.
+- Before implementing fetch, define filtering for boosts, replies, content warnings, HTML, and visibility; never ingest private/direct statuses accidentally.
+- The intended hard-coded post limit is 500 characters, but the stub does not truncate. Enforce the destination limit before a real write.
+- Network failures need bounded retry and rate-limit handling rather than termination or a tight loop.
 
 ## Validation
 
-Run `cargo fmt --check`, `cargo clippy --all-targets --all-features`, `cargo test`, and `cargo build --release`. Mock the Mastodon API, clock, and randomness for pagination, privacy filtering, empty corpus, HTML/Unicode cleanup, over-limit generation, authentication failure, write failure, retry bounds, and shutdown. Live posts require a dedicated test account; never commit `.env` or logs.
+Run `cargo fmt --check`, `cargo clippy --all-targets --all-features`, `cargo test`, and `cargo build --release`. Current verification must confirm stub behavior and avoid claiming integration coverage. When implementing the missing path, add mocked tests for pagination, privacy filtering, empty corpora, cleanup, length enforcement, auth/write errors, scheduling, and shutdown. Live posts require a dedicated test account; never commit `.env` or `log/`.

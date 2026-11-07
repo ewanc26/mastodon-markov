@@ -20,4 +20,4 @@ a Mastodon bot based on a set of posts digested by the Markov chain.
 
 ## Recent history
 
-Sync AGENTS.md from zincfox; Sync AGENTS.md from zincfox; Sync CONTRIBUTING.md from zincfox; Sync CONTRIBUTING.md from zincfox; Update config.yml issue template
+Update config.yml issue template

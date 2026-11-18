@@ -1,5 +1,7 @@
 # Mastodon Markov Bot
 
+[![Licence](https://img.shields.io/github/license/ewanc26/mastodon-markov?label=licence)](LICENSE)
+[![Sponsor](https://img.shields.io/github/sponsors/ewanc26?logo=githubsponsors&logoColor=white&label=sponsors)](https://github.com/sponsors/ewanc26)
 [![No Maintenance Intended](http://unmaintained.tech/badge.svg)](http://unmaintained.tech/)
 
 A Rust tool to create and post Markov chain-generated content to a Mastodon account.
@@ -41,7 +43,11 @@ Run the bot:
 cargo run --release
 ```
 
-## License
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for the workflow and the checks required before opening a pull request.
+
+## Licence
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
 

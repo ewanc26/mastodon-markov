@@ -4,7 +4,7 @@ Guidance for AI coding agents working in **mastodon-markov**.
 
 ## Project overview
 
-a Mastodon bot based on a set of posts digested by the Markov chain.
+A Mastodon bot based on a set of posts digested by the Markov chain.
 
 - Language: Rust
 - Default branch: main

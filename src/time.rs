@@ -4,7 +4,7 @@
 //! pattern isn't trivially predictable.
 
 use chrono::{DateTime, Duration, Local};
-use rand::Rng;
+use rand::RngExt;
 use tokio::time::sleep;
 use tracing::warn;
 
@@ -15,8 +15,8 @@ use tracing::warn;
 /// Range: 30 minutes to 3 hours. The jitter means the bot doesn't
 /// post on a cron-like beat that followers could game.
 pub fn calculate_refresh_interval() -> i64 {
-    let mut rng = rand::thread_rng();
-    rng.gen_range(1800..10800)
+    let mut rng = rand::rng();
+    rng.random_range(1800..10800)
 }
 
 /// Compute the absolute time of the next refresh from now.

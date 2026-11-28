@@ -31,11 +31,7 @@ pub fn get_account_id(_client: &Mastodon, _username: &str) -> Option<String> {
 ///
 /// Placeholder — the paginated API call isn't wired yet.
 /// `cleaner` is a function that strips/normalises each post's text.
-pub fn fetch_account_posts<F>(
-    _client: &Mastodon,
-    _account_id: &str,
-    _cleaner: F,
-) -> Vec<String>
+pub fn fetch_account_posts<F>(_client: &Mastodon, _account_id: &str, _cleaner: F) -> Vec<String>
 where
     F: Fn(&str) -> String,
 {

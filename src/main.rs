@@ -33,8 +33,7 @@ async fn main() -> Result<()> {
     let file_appender = tracing_appender::rolling::daily(log_directory, "general.log");
     let (non_blocking, _guard) = tracing_appender::non_blocking(file_appender);
 
-    let filter = EnvFilter::try_from_default_env()
-        .unwrap_or_else(|_| EnvFilter::new("info"));
+    let filter = EnvFilter::try_from_default_env().unwrap_or_else(|_| EnvFilter::new("info"));
 
     tracing_subscriber::registry()
         .with(filter)
@@ -50,16 +49,14 @@ async fn main() -> Result<()> {
     // Load environment variables
     dotenv().ok();
 
-    let mastodon_base_url =
-        env::var("MASTODON_BASE_URL").context("MASTODON_BASE_URL not set")?;
+    let mastodon_base_url = env::var("MASTODON_BASE_URL").context("MASTODON_BASE_URL not set")?;
     let mastodon_access_token =
         env::var("MASTODON_ACCESS_TOKEN").context("MASTODON_ACCESS_TOKEN not set")?;
 
-    let mastodon_api =
-        mastodon_client::init_mastodon(&mastodon_base_url, &mastodon_access_token);
+    let mastodon_api = mastodon_client::init_mastodon(&mastodon_base_url, &mastodon_access_token);
 
-    let destination_base_url =
-        env::var("DESTINATION_MASTODON_BASE_URL").context("DESTINATION_MASTODON_BASE_URL not set")?;
+    let destination_base_url = env::var("DESTINATION_MASTODON_BASE_URL")
+        .context("DESTINATION_MASTODON_BASE_URL not set")?;
     let destination_access_token = env::var("DESTINATION_MASTODON_ACCESS_TOKEN")
         .context("DESTINATION_MASTODON_ACCESS_TOKEN not set")?;
 
